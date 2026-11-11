@@ -14,6 +14,7 @@
       - level 7           (1 телепорт)
       - level 8           (2 телепорта, интервал 6 сек)
       - level 9           (1 телепорт)
+      - level 10          (1 телепорт, поворот 180)
       - DestroyGUI        (полное отключение всего)
 --]]
 
@@ -739,6 +740,34 @@ table.insert(CLEANUP_CALLBACKS, function()
     if level9Guard.thread then
         pcall(function() task.cancel(level9Guard.thread) end)
         level9Guard.thread = nil
+    end
+end)
+
+--------------------------------------------------------------------
+-- level 10 — одиночный телепорт с поворотом на 180°
+--------------------------------------------------------------------
+local level10Points = {
+    CFrame.new(
+        -174.082901, 324.200531, -47.4771576,
+        -1, 0,  0,
+         0, 1,  0,
+         0, 0, -1
+    ),
+}
+local level10Guard = { active = false, cancel = false, thread = nil }
+
+createActionButton(
+    "level 10",
+    "Одиночный телепорт в точку уровня 10 (поворот на 180).",
+    function() startTeleportSequence(level10Points, "L10", level10Guard) end
+)
+
+table.insert(CLEANUP_CALLBACKS, function()
+    level10Guard.cancel = true
+    level10Guard.active = false
+    if level10Guard.thread then
+        pcall(function() task.cancel(level10Guard.thread) end)
+        level10Guard.thread = nil
     end
 end)
 
