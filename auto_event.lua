@@ -13,14 +13,14 @@
       - level 6           (1 телепорт)
       - level 7           (1 телепорт)
       - level 8           (2 телепорта, интервал 6 сек)
+      - level 9           (1 телепорт)
       - DestroyGUI        (полное отключение всего)
 --]]
 
 -- ============================================================
 -- АВТОПЕРЕЗАГРУЗКА ПОСЛЕ ТЕЛЕПОРТА
--- Замените SCRIPT_URL на вашу GitHub Raw-ссылку
 -- ============================================================
-local SCRIPT_URL = "https://raw.githubusercontent.com/Sema23467/auto_event.lua/refs/heads/main/auto_event.lua"
+local SCRIPT_URL = "https://raw.githubusercontent.com/Sema23467/auto_event.lua/main/auto_event.lua"
 
 local queueFn = queue_on_teleport
     or (syn and syn.queue_on_teleport)
@@ -711,6 +711,34 @@ table.insert(CLEANUP_CALLBACKS, function()
     if level8Guard.thread then
         pcall(function() task.cancel(level8Guard.thread) end)
         level8Guard.thread = nil
+    end
+end)
+
+--------------------------------------------------------------------
+-- level 9 — одиночный телепорт
+--------------------------------------------------------------------
+local level9Points = {
+    CFrame.new(
+        330.100098, 105.600021, 85.3000031,
+         1, 0, 0,
+         0, 1, 0,
+         0, 0, 1
+    ),
+}
+local level9Guard = { active = false, cancel = false, thread = nil }
+
+createActionButton(
+    "level 9",
+    "Одиночный телепорт в точку уровня 9.",
+    function() startTeleportSequence(level9Points, "L9", level9Guard) end
+)
+
+table.insert(CLEANUP_CALLBACKS, function()
+    level9Guard.cancel = true
+    level9Guard.active = false
+    if level9Guard.thread then
+        pcall(function() task.cancel(level9Guard.thread) end)
+        level9Guard.thread = nil
     end
 end)
 
