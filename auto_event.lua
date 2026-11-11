@@ -2,6 +2,7 @@
     auto event
     Премиум-меню (тёмно-серый, острые углы)
     Открытие/закрытие: Insert
+    Автоперезагрузка после телепорта: queue_on_teleport
     Функции:
       - Test Feature      (On/Off)
       - level 1           (3 телепорта, интервал 6 сек)
@@ -14,6 +15,28 @@
       - level 8           (2 телепорта, интервал 6 сек)
       - DestroyGUI        (полное отключение всего)
 --]]
+
+-- ============================================================
+-- АВТОПЕРЕЗАГРУЗКА ПОСЛЕ ТЕЛЕПОРТА
+-- Замените SCRIPT_URL на вашу GitHub Raw-ссылку
+-- ============================================================
+local SCRIPT_URL = "https://raw.githubusercontent.com/ВАШ_НИК/ВАШ_РЕПОЗИТОРИЙ/main/auto_event.lua"
+
+local queueFn = queue_on_teleport
+    or (syn and syn.queue_on_teleport)
+    or (fluxus and fluxus.queue_on_teleport)
+    or (krnl and krnl.queue_on_teleport)
+    or (codex and codex.queue_on_teleport)
+    or queueteleport
+
+if queueFn then
+    pcall(function()
+        queueFn('loadstring(game:HttpGet("' .. SCRIPT_URL .. '"))()')
+    end)
+else
+    warn("[auto event] queue_on_teleport недоступен. Используйте autoexec-папку.")
+end
+-- ============================================================
 
 if _G.AutoEventMenuLoaded then
     pcall(function() _G.AutoEventDestroy() end)
